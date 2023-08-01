@@ -7,5 +7,29 @@
   </head>
   <body>
     <h2><u>DJANGO PLAYGROUND</u></h2>
+
+    {% if name %}
+    <p>🚀 Player: {{name}}</p>
+    {% else %}
+    <p>😒 Player: Anonymous</p>
+    {% endif %}
+
+    <p>Result of {{reason}}</p>
+    <hr>
+    <ul>
+      {% for product in products %}
+      <li>
+        {{product.title}} - 💸 {{product.unit_price}} <br>
+        {{product.collection.title}}
+      </li>
+      {% endfor %}
+    </ul>
+
+    <!-- <ul>
+      {% for product in products %}
+      <li>{{product}}</li>
+      {% endfor %}
+    </ul> -->
+
   </body>
 </html>
