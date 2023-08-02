@@ -1,12 +1,13 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
+from django.db import transaction, connection
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Sum, Max, Min, Avg
 from django.db.models.functions import Concat
 from django.http import HttpResponse
 from django.shortcuts import render
-from store.models import Product, OrderItem, Order, Customer
-from tags.models import TaggedItem, TaggedItemManager
+from store.models import Product, OrderItem, Order, Customer, Collection
+from tags.models import TaggedItem
 
 
 def page_init(req):
@@ -280,4 +281,89 @@ def custom_managers(req):
         req,
         "hello.html",
         {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
+
+
+def create_collection(req):
+    collection = Collection()
+    collection.title = "Video Games"
+    collection.featured_product = Product(pk=1)
+    collection.save()
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Collection created", "id": collection.id},
+    )
+
+
+def update_collection(req):
+    # Don't update like this
+    # collection = Collection(pk=11)
+    # collection.title = "Games"
+    # collection.featured_product = None
+    # collection.save()
+
+    # update like this
+    collection = Collection.objects.get(pk=11)
+    collection.featured_product = None
+    collection.save()
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Collection updated", "id": collection.id},
+    )
+
+
+def delete_collection(req):
+    collection = Collection(pk=11)
+    # single object delete
+    collection.delete()
+
+    # multiple object delete
+    Collection.objects.filter(id__gt=10).delete()
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Collection updated", "id": collection.id},
+    )
+
+
+def transaction_query(req):
+    # .... other code that is outside of transaction wrapper
+
+    # transaction.atomic() - if any error occurs, during all operations it will rollback to previous state
+    with transaction.atomic():
+        order = Order()
+        order.customer_id = 1
+        order.save()
+
+        item = OrderItem()
+        item.order = order
+        item.product_id = 1
+        item.quantity = 1
+        item.unit_price = 10
+        item.save()
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Collection updated", "id": ""},
+    )
+
+
+def executing_sql_query(req):
+    # approach 1
+    query_set = Product.objects.raw("SELECT * FROM store_product")
+    # approach 2
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT * FROM store_product")
+        query_set = cursor.fetchall()
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Raw SQL query", "result": list(query_set)},
     )

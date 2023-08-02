@@ -18,6 +18,10 @@ urlpatterns = [
     # path("", views.grouping_data),
     # path("", views.expression_wrappers),
     # path("", views.generic_relationship),
-    path("", views.custom_managers),
+    # path("", views.custom_managers),
+    # path("", views.update_collection),
+    # path("", views.delete_collection),
+    # path("", views.transaction_query),
+    path("", views.executing_sql_query),
     path("hello/", views.render_store_html),
 ]
