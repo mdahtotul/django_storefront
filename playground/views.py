@@ -1,8 +1,12 @@
 from django.core.exceptions import ObjectDoesNotExist
-from django.shortcuts import render
-from django.db.models import Q, F
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
+from django.db.models.aggregates import Count, Sum, Max, Min, Avg
+from django.db.models.functions import Concat
 from django.http import HttpResponse
-from store.models import Product, OrderItem, Order
+from django.shortcuts import render
+from store.models import Product, OrderItem, Order, Customer
+from tags.models import TaggedItem, TaggedItemManager
 
 
 def page_init(req):
@@ -22,6 +26,10 @@ def page_init(req):
             </html>
         """
     )
+
+
+def render_store_html(req):
+    return render(req, "store.html", {"name": "core"})
 
 
 def all_query_set(req):
@@ -172,11 +180,104 @@ def selecting_related_objects(req):
         "hello.html",
         {
             "name": "Arif",
-            "reason": "Distinct ordered products",
+            "reason": "Selecting or Prefetching related fields",
             "products": list(query_set),
         },
     )
 
 
-def render_store_html(req):
-    return render(req, "store.html", {"name": "core"})
+def aggregate_objects(req):
+    # filter product then aggregating results
+    result = Product.objects.filter(collection__id=1).aggregate(
+        count=Count("id"), min_price=Min("unit_price"), max_price=Max("unit_price")
+    )
+
+    # total number of products
+    result = Product.objects.aggregate(
+        count=Count("id"), min_price=Min("unit_price"), max_price=Max("unit_price")
+    )
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Aggregate Queries", "result": result},
+    )
+
+
+def annotating_objects(req):
+    # adding new column name 'is_new'
+    result = Customer.objects.annotate(is_new=Value(True))
+
+    # adding new column name 'new_id'
+    result = Customer.objects.annotate(new_id=F("id"))
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Aggregate Queries", "result": list(result)},
+    )
+
+
+def using_db_functions(req):
+    # CONCAT
+    query_set = Customer.objects.annotate(
+        full_name=Func(F("first_name"), Value(" "), F("last_name"), function="CONCAT")
+    )
+
+    query_set = Customer.objects.annotate(
+        full_name=Concat("first_name", Value(" "), "last_name")
+    )
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
+
+
+def grouping_data(req):
+    query_set = Customer.objects.annotate(orders_count=Count("order"))
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
+
+
+def expression_wrappers(req):
+    discounted_price = ExpressionWrapper(
+        F("unit_price") * 0.8, output_field=DecimalField()
+    )
+    query_set = Product.objects.annotate(discount_price=discounted_price)
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
+
+
+def generic_relationship(req):
+    content_type = ContentType.objects.get_for_model(Product)
+
+    query_set = TaggedItem.objects.select_related("tag").filter(
+        content_type=content_type, object_id=1
+    )
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
+
+
+def custom_managers(req):
+    # custom manager is created in tags\models.py
+    query_set = TaggedItem.objects.get_tags_for(Product, 1)
+
+    return render(
+        req,
+        "hello.html",
+        {"name": "Arif", "reason": "Database function", "result": list(query_set)},
+    )
