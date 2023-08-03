@@ -1,9 +1,9 @@
 # Current Dir
 
-Code With Mosh - The Ultimate Django Series (Part 1)\5.Django ORM
+Code With Mosh - The Ultimate Django Series (Part 1)\6.The Admin Site
 
 # Last Tutorial
 
-13- Selecting Related Objects
+4- Customizing the List Page
 
 # Re-check: lesson -
