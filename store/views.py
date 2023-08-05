@@ -3,22 +3,38 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from store.models import Product
-from store.serializers import ProductsSerializers
+from store.serializers import ProductSerializer
 
 
-@api_view()
+@api_view(["GET", "POST"])
 def product_list(req):
-    queryset = Product.objects.select_related("collection").all()
-    serializer = ProductsSerializers(queryset, many=True, context={"request": req})
-    return Response(serializer.data)
+    if req.method == "GET":
+        queryset = Product.objects.select_related("collection").all()
+        serializer = ProductSerializer(queryset, many=True, context={"request": req})
+        return Response(serializer.data)
+    elif req.method == "POST":
+        serializer = ProductSerializer(data=req.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view()
+@api_view(["GET", "PUT"])
 def product_detail(req, id):
     product = get_object_or_404(Product, pk=id)
-    serializer = ProductsSerializers(product)
-    data = serializer.data
-    return Response(data)
+
+    if req.method == "GET":
+        serializer = ProductSerializer(product)
+        data = serializer.data
+
+        return Response(data)
+    elif req.method == "PUT":
+        serializer = ProductSerializer(product, data=req.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
 
 
 @api_view()
