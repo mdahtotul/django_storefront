@@ -4,9 +4,14 @@ from store.models import Product, Collection
 
 
 class CollectionSerializer(serializers.ModelSerializer):
+    products_count = serializers.IntegerField(required=False)
+
     class Meta:
         model = Collection
-        fields = ["id", "title"]
+        fields = ["id", "title", "products_count"]
+        extra_kwargs = {
+            "products_count": {"required": False},
+        }
 
 
 class ProductSerializer(serializers.ModelSerializer):
