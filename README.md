@@ -1,12 +1,11 @@
 # Current Dir
-
-Code With Mosh - The Ultimate Django Series (Part 1)\6.The Admin Site
+Code With Mosh - The Ultimate Django Series (Part 2)\2 Building RESTful APIs with Django REST Framework\
 
 # Last Tutorial
 
-4- Providing links to other pages
+10- Creating Custom Serializer Fields
 
-# Re-check: lesson -
+# Re-check: lesson
 
 
 # Setup django project with pipenv
