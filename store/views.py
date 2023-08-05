@@ -8,8 +8,8 @@ from store.serializers import ProductsSerializers
 
 @api_view()
 def product_list(req):
-    queryset = Product.objects.all()
-    serializer = ProductsSerializers(queryset, many=True)
+    queryset = Product.objects.select_related("collection").all()
+    serializer = ProductsSerializers(queryset, many=True, context={"request": req})
     return Response(serializer.data)
 
 
@@ -19,3 +19,8 @@ def product_detail(req, id):
     serializer = ProductsSerializers(product)
     data = serializer.data
     return Response(data)
+
+
+@api_view()
+def collection_detail(req, pk):
+    return Response("ok")
