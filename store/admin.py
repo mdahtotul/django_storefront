@@ -39,6 +39,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_per_page = 15
     list_select_related = ["collection"]
     prepopulated_fields = {"slug": ["title"]}
+    search_fields = ["title__istartswith"]
 
     def collection_title(self, product):
         return product.collection.title
@@ -78,9 +79,18 @@ class CustomerAdmin(admin.ModelAdmin):
         return super().get_queryset(request).annotate(orders_count=Count("order"))
 
 
+class OrderItemInline(admin.TabularInline):
+    autocomplete_fields = ["product"]
+    min_num = 1
+    max_num = 10
+    model = models.OrderItem
+    extra = 0
+
+
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     autocomplete_fields = ["customer"]
+    inlines = [OrderItemInline]
     list_display = ["id", "placed_at", "payment_status", "customer_title"]
     list_editable = ["payment_status"]
     ordering = ["-placed_at"]
