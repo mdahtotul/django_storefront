@@ -1,4 +1,4 @@
-from typing import Any, List, Optional, Tuple
+from typing import Any
 from django.contrib import admin, messages
 from django.db.models.aggregates import Count
 from django.db.models.query import QuerySet
@@ -25,6 +25,7 @@ class InventoryFilter(admin.SimpleListFilter):
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     actions = ["clear_inventory"]
+    autocomplete_fields = ["collection"]
     list_display = [
         "id",
         "title",
@@ -37,6 +38,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_filter = ["collection", "last_update", InventoryFilter]
     list_per_page = 15
     list_select_related = ["collection"]
+    prepopulated_fields = {"slug": ["title"]}
 
     def collection_title(self, product):
         return product.collection.title
@@ -78,6 +80,7 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
+    autocomplete_fields = ["customer"]
     list_display = ["id", "placed_at", "payment_status", "customer_title"]
     list_editable = ["payment_status"]
     ordering = ["-placed_at"]
@@ -91,6 +94,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(models.Collection)
 class CollectionAdmin(admin.ModelAdmin):
     list_display = ["id", "title", "products_count"]
+    search_fields = ["title__istartswith"]
 
     """
     reverse(app_model_page) -> to get the url of an app followed by the model page
