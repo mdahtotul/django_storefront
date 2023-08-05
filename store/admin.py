@@ -1,5 +1,7 @@
-from django.contrib import admin
+from typing import Any, List, Optional, Tuple
+from django.contrib import admin, messages
 from django.db.models.aggregates import Count
+from django.db.models.query import QuerySet
 from django.urls import reverse
 from django.utils.html import format_html, urlencode
 from . import models
@@ -7,10 +9,32 @@ from . import models
 # to know further search for django modeladmin-options
 
 
+# InventoryFilter is a custom filter that will be used in the admin panel to filter the products in products page
+class InventoryFilter(admin.SimpleListFilter):
+    title = "inventory"
+    parameter_name = "inventory"
+
+    def lookups(self, req, model_admin):
+        return [("<10", "Low")]
+
+    def queryset(self, req, query_set: QuerySet[Any]):
+        if self.value() == "<10":
+            return query_set.filter(inventory__lt=10)
+
+
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ["id", "title", "unit_price", "inventory_status", "collection_title"]
+    actions = ["clear_inventory"]
+    list_display = [
+        "id",
+        "title",
+        "unit_price",
+        "inventory",
+        "inventory_status",
+        "collection_title",
+    ]
     list_editable = ["unit_price"]
+    list_filter = ["collection", "last_update", InventoryFilter]
     list_per_page = 15
     list_select_related = ["collection"]
 
@@ -23,13 +47,21 @@ class ProductAdmin(admin.ModelAdmin):
             return "Low"
         return "OK"
 
+    @admin.action(description="Clear inventory")
+    def clear_inventory(self, req, query_set: QuerySet[Any]):
+        updated_count = query_set.update(inventory=0)
+        self.message_user(
+            req, f"{updated_count} products were successfully cleared", messages.INFO
+        )
+
 
 @admin.register(models.Customer)
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ["id", "first_name", "last_name", "membership", "orders_count"]
     list_editable = ["membership"]
-    ordering = ["first_name", "last_name"]
     list_per_page = 15
+    ordering = ["first_name", "last_name"]
+    search_fields = ["first_name__istartswith", "last_name__istartswith"]
 
     @admin.display(ordering="orders_count")
     def orders_count(self, customer):
