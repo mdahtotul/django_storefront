@@ -1,9 +1,8 @@
 # Current Dir
-Code With Mosh - The Ultimate Django Series (Part 2)\2 Building RESTful APIs with Django REST Framework\
-
+Code With Mosh - The Ultimate Django Series (Part 2)\3 Advanced API Concepts
 # Last Tutorial
 
-10- Creating Custom Serializer Fields
+2- Class-based Views
 
 # Re-check: lesson
 

@@ -3,9 +3,13 @@ from store import views
 
 urlpatterns = [
     # products
-    path("products/", views.product_list, name="product_list"),
-    path("products/<int:id>/", views.product_detail, name="product_detail"),
+    path("products/", views.ProductList.as_view(), name="product_list"),
+    path("products/<int:id>/", views.ProductDetail.as_view(), name="product_detail"),
     # collections
-    path("collections/", views.collection_list, name="collection_list"),
-    path("collections/<int:pk>", views.collection_detail, name="collection_detail"),
+    path("collections/", views.CollectionList.as_view(), name="collection_list"),
+    path(
+        "collections/<int:pk>",
+        views.CollectionDetail.as_view(),
+        name="collection_detail",
+    ),
 ]
