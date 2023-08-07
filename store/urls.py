@@ -1,6 +1,15 @@
 from django.urls import path
+from rest_framework.routers import DefaultRouter
 from store import views
 
+router = DefaultRouter()
+router.register("products", views.ProductViewSet, basename="products")
+router.register("collections", views.CollectionViewSet, basename="collections")
+
+urlpatterns = router.urls
+
+"""
+# urlpatterns without ModelViewSet
 urlpatterns = [
     # products
     path("products/", views.ProductList.as_view(), name="product_list"),
@@ -13,3 +22,4 @@ urlpatterns = [
         name="collection_detail",
     ),
 ]
+"""

@@ -2,10 +2,11 @@ from django.db.models.aggregates import Count
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from store.models import Product, Collection
+from store.models import Product, Collection, OrderItem
 from store.serializers import ProductSerializer, CollectionSerializer
 
 
@@ -23,7 +24,6 @@ class ProductList(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-"""
 
 
 # Getting ProductList or creating product Generic Views
@@ -36,6 +36,7 @@ class ProductList(ListCreateAPIView):
 
     def get_serializer_context(self):
         return {"request": self.request}
+"""
 
 
 """
@@ -68,7 +69,6 @@ class ProductDetail(APIView):
         product.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-"""
 
 
 # Getting Product or update or delete product with Generic Views
@@ -92,6 +92,30 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
         product.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+"""
+
+
+class ProductViewSet(ModelViewSet):
+    def get_queryset(self):
+        return Product.objects.all()
+
+    def get_serializer_class(self):
+        return ProductSerializer
+
+    def get_serializer_context(self):
+        return {"request": self.request}
+
+    # below we're overriding the default destroy method because it has some custom functions
+    def destroy(self, request, *args, **kwargs):
+        if OrderItem.objects.filter(product_id=kwargs["pk"]).exists():
+            return Response(
+                {
+                    "error": "Product cannot be deleted because it is associated with an order item"
+                },
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+
+        return super().destroy(request, *args, **kwargs)
 
 
 """
@@ -109,7 +133,6 @@ class CollectionList(APIView):
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
-"""
 
 
 # Getting CollectionList or creating collection with Generic Views
@@ -119,6 +142,7 @@ class CollectionList(ListCreateAPIView):
 
     def get_serializer_class(self):
         return CollectionSerializer
+"""
 
 
 """
@@ -156,7 +180,6 @@ class CollectionDetail(APIView):
         collection.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
-"""
 
 
 class CollectionDetail(RetrieveUpdateDestroyAPIView):
@@ -180,3 +203,23 @@ class CollectionDetail(RetrieveUpdateDestroyAPIView):
         collection.delete()
 
         return Response(status=status.HTTP_204_NO_CONTENT)
+"""
+
+
+class CollectionViewSet(ModelViewSet):
+    def get_queryset(self):
+        return Collection.objects.annotate(products_count=Count("products")).all()
+
+    def get_serializer_class(self):
+        return CollectionSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        if Product.objects.filter(collection_id=kwargs["pk"]).exists():
+            return Response(
+                {
+                    "error": "Collection cannot be deleted because it contains on or more products"
+                },
+                status=status.HTTP_405_METHOD_NOT_ALLOWED,
+            )
+
+        return super().destroy(request, *args, **kwargs)
