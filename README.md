@@ -2,7 +2,7 @@
 Code With Mosh - The Ultimate Django Series (Part 2)\3 Advanced API Concepts
 # Last Tutorial
 
-2- Class-based Views
+7- Routers
 
 # Re-check: lesson
 

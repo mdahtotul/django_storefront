@@ -6,8 +6,8 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from store.models import Product, Collection, OrderItem
-from store.serializers import ProductSerializer, CollectionSerializer
+from store.models import Product, Collection, OrderItem, Review
+from store.serializers import ProductSerializer, CollectionSerializer, ReviewSerializer
 
 
 """
@@ -223,3 +223,14 @@ class CollectionViewSet(ModelViewSet):
             )
 
         return super().destroy(request, *args, **kwargs)
+
+
+class ReviewViewSet(ModelViewSet):
+    def get_queryset(self):
+        return Review.objects.filter(product_id=self.kwargs["product_pk"])
+
+    def get_serializer_class(self):
+        return ReviewSerializer
+
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs["product_pk"]}
