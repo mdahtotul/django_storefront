@@ -1,8 +1,9 @@
 # Current Dir
-Code With Mosh - The Ultimate Django Series (Part 2)\3 Advanced API Concepts
+Code With Mosh - The Ultimate Django Series (Part 2)\4 Designing and Implementing a Shopping Cart API
+
 # Last Tutorial
 
-11- Generic Filtering
+1-
 # Re-check: lesson
 
 
