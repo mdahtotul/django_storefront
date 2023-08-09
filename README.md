@@ -2,8 +2,7 @@
 Code With Mosh - The Ultimate Django Series (Part 2)\3 Advanced API Concepts
 # Last Tutorial
 
-7- Routers
-
+11- Generic Filtering
 # Re-check: lesson
 
 
