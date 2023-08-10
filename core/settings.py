@@ -42,9 +42,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "playground",
     "store",
-    "store_custom",
     "tags",
     "likes",
+    "core_custom",
 ]
 
 MIDDLEWARE = [
@@ -145,3 +145,5 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": False,
 }
+
+AUTH_USER_MODEL = "core_custom.User"
