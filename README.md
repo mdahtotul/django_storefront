@@ -3,7 +3,7 @@ Code With Mosh - The Ultimate Django Series (Part 2)\4 Designing and Implementin
 
 # Last Tutorial
 
-1-
+6- Deleting a Cart
 # Re-check: lesson
 
 
