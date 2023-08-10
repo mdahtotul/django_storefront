@@ -1,13 +1,13 @@
 # Current Dir
-Code With Mosh - The Ultimate Django Series (Part 2)\4 Designing and Implementing a Shopping Cart API
-
+Code With Mosh - The Ultimate Django Series (Part 2)\5 Django Authentication System
 # Last Tutorial
 
-6- Deleting a Cart
+1- 
 # Re-check: lesson
 
 
 # Setup django project with pipenv
+Follow the below process to create a django project
 ## Step-1: Install & Check pipenv
 
 If pipenv is not installed in your computer run `pip install pipenv`
