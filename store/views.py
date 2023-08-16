@@ -3,10 +3,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 
 # from django.shortcuts import get_object_or_404
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.mixins import (
     CreateModelMixin,
     RetrieveModelMixin,
+    UpdateModelMixin,
     DestroyModelMixin,
 )
 from rest_framework.response import Response
@@ -17,12 +19,21 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 # from rest_framework.views import APIView
 
 from store.filters import ProductFilter
-from store.models import Cart, CartItem, Product, Collection, OrderItem, Review
+from store.models import (
+    Cart,
+    CartItem,
+    Customer,
+    Product,
+    Collection,
+    OrderItem,
+    Review,
+)
 from store.pagination import DefaultPagination
 from store.serializers import (
     AddCartItemSerializer,
     CartItemSerializer,
     CartSerializer,
+    CustomerSerializer,
     ProductSerializer,
     CollectionSerializer,
     ReviewSerializer,
@@ -290,3 +301,25 @@ class CartItemViewSet(ModelViewSet):
 
     def get_serializer_context(self):
         return {"cart_id": self.kwargs["cart_pk"]}
+
+
+class CustomerViewSet(
+    CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet
+):
+    def get_queryset(self):
+        return Customer.objects.all()
+
+    def get_serializer_class(self):
+        return CustomerSerializer
+    
+    @action(detail=False, methods=["GET", 'PUT'])
+    def me(self, request):
+        (customer, created) = Customer.objects.get_or_create(user_id = request.user.id)
+        if request.method == "GET":
+            serializer = CustomerSerializer(customer)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        elif request.method == "PUT":
+            serializer = CustomerSerializer(customer, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)

@@ -1,8 +1,8 @@
 # Current Dir
-Code With Mosh - The Ultimate Django Series (Part 2)\5 Django Authentication System
+Code With Mosh - The Ultimate Django Series (Part 2)\6 Securing APIs
 # Last Tutorial
+10- Getting Current User Profile
 
-1- 
 # Re-check: lesson
 
 
