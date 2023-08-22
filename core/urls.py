@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
-admin.site.site_header = "Storefront Adminnistration"
+admin.site.site_header = "Storefront Administration"
 # admin.site.site_title = "Core Admin"
 admin.site.index_title = "Admin"
 

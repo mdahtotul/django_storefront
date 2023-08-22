@@ -9,6 +9,7 @@ router.register("products", views.ProductViewSet, basename="products")
 router.register("collections", views.CollectionViewSet, basename="collections")
 router.register("carts", views.CartViewSet, basename="carts")
 router.register("customers", views.CustomerViewSet, basename="customers")
+router.register("orders", views.OrderViewSet, basename="orders")
 
 # products nested router
 # route will look like - /products/1/reviews/
