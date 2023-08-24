@@ -1,14 +1,13 @@
 # Current Dir
-Code With Mosh - The Ultimate Django Series (Part 2)\2 Building RESTful APIs with Django REST Framework\
-
+Code With Mosh - The Ultimate Django Series (Part 2)\6 Securing APIs
 # Last Tutorial
-
-10- Creating Custom Serializer Fields
+10- Getting Current User Profile
 
 # Re-check: lesson
 
 
 # Setup django project with pipenv
+Follow the below process to create a django project
 ## Step-1: Install & Check pipenv
 
 If pipenv is not installed in your computer run `pip install pipenv`

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>API root</title>
+  </head>
+
+  <style>
+    a {
+      text-decoration: none;
+    }
+
+    .heading {
+      text-align: center;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 8px;
+    }
+    
+
+    tr:nth-child(even) {background-color: #f2f2f2;}
+  </style>
+
+  <body>
+    <h1 class="heading">All API routes</h1>
+
+    <table border="1px solid gray">
+        <tr>
+            <th>Name</th>
+            <th>Route</th>
+            <th>Authorization</th>
+            <th>User role</th>
+        </tr>
+        
+        <tr>
+          <td>auth-users</td>
+          <td><a href="http://127.0.0.1:9000/auth/users">http://127.0.0.1:9000/auth/users</a></td>
+          <td></td>
+          <td>Public</td>
+        </tr>
+        
+        <tr>
+          <td>create-jwt</td>
+          <td><a href="http://127.0.0.1:9000/auth/jwt/create">http://127.0.0.1:9000/auth/jwt/create</a></td>
+          <td></td>
+          <td>Public</td>
+        </tr>
+        
+        <tr>
+          <td>refresh-jwt</td>
+          <td><a href="http://127.0.0.1:9000/auth/jwt/refresh">http://127.0.0.1:9000/auth/jwt/refresh</a></td>
+          <td></td>
+          <td>Public</td>
+        </tr>
+
+        <tr>
+          <td>products</td>
+          <td><a href="http://127.0.0.1:9000/store/products/">http://127.0.0.1:9000/store/products/</a></td>
+          <td>JWT</td>
+          <td>Admin</td>
+        </tr>
+
+        <tr>
+          <td>collections</td>
+          <td><a href="http://127.0.0.1:9000/store/collections/">http://127.0.0.1:9000/store/collections/</a></td>
+          <td></td>
+          <td>Public</td>
+        </tr>
+
+        <tr>
+          <td>carts</td>
+          <td><a href="http://127.0.0.1:9000/store/carts/">http://127.0.0.1:9000/store/carts/</a></td>
+          <td>JWT</td>
+          <td>Authenticated</td>
+        </tr>
+
+        <tr>
+          <td>customers</td>
+          <td><a href="http://127.0.0.1:9000/store/customers/">http://127.0.0.1:9000/store/customers/</a></td>
+          <td>JWT</td>
+          <td>Admin</td>
+        </tr>
+
+        <tr>
+          <td>orders</td>
+          <td><a href="http://127.0.0.1:9000/store/orders/">http://127.0.0.1:9000/store/orders/</a></td>
+          <td>JWT</td>
+          <td>Authenticated</td>
+        </tr>
+            
+    </table>
+  </body>
+</html>
