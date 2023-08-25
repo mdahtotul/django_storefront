@@ -95,7 +95,7 @@ DATABASES = {
         # "ENGINE": "django.db.backends.sqlite3",
         # "NAME": BASE_DIR / "db.sqlite3",
         "ENGINE": "django.db.backends.mysql",
-        "NAME": "storefront",
+        "NAME": "storefront3",
         "HOST": "localhost",
         "USER": "root",
         "PASSWORD": "hp15CC154TX",
