@@ -47,8 +47,10 @@ from store.serializers import (
     UpdateOrderSerializer,
 )
 
+
 def home(request):
-    return render(request, "route.html")
+    domain_name = f"{request.scheme}://{request.META['HTTP_HOST']}"
+    return render(request, "route.html", {"domain_name": domain_name})
 
 """
 # Getting ProductList or creating product without Generic Views
