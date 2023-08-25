@@ -26,6 +26,14 @@ class InventoryFilter(admin.SimpleListFilter):
         if self.value() == "<10":
             return query_set.filter(inventory__lt=10)
 
+class ProductImageInline(admin.TabularInline):
+    model = models.ProductImage
+    readonly_fields = ["thumbnail"]
+
+    def thumbnail(self, instance):
+        if instance.image.name != "":
+            return format_html(f"<img src='{instance.image.url}' class='thumbnail' />")
+        return ""
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
@@ -61,6 +69,9 @@ class ProductAdmin(admin.ModelAdmin):
         self.message_user(
             req, f"{updated_count} products were successfully cleared", messages.INFO
         )
+
+    class Media:
+        css = {"all": ["store/style.css"]}
 
 
 @admin.register(models.Customer)

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django_filters",
     "debug_toolbar",
     "rest_framework",
+    "corsheaders",
     "djoser",
     "playground",
     "store",
@@ -50,6 +51,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -64,6 +66,11 @@ INTERNAL_IPS = [
     # ...
     "127.0.0.1",
     # ...
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5050",
+    "http://127.0.0.1:8001"
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -169,3 +176,4 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=2),
 }
+
