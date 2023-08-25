@@ -29,6 +29,7 @@ from store.models import (
     Product,
     Collection,
     OrderItem,
+    ProductImage,
     Review,
 )
 from store.pagination import DefaultPagination
@@ -40,6 +41,7 @@ from store.serializers import (
     CreateOrderSerializer,
     CustomerSerializer,
     OrderSerializer,
+    ProductImageSerializer,
     ProductSerializer,
     CollectionSerializer,
     ReviewSerializer,
@@ -146,7 +148,7 @@ class ProductViewSet(ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
     def get_queryset(self):
-        return Product.objects.all()
+        return Product.objects.prefetch_related("images").all()
 
     def get_serializer_class(self):
         return ProductSerializer
@@ -166,6 +168,16 @@ class ProductViewSet(ModelViewSet):
 
         return super().destroy(request, *args, **kwargs)
 
+
+class ProductImageViewSet(ModelViewSet):
+    serializer_class = ProductImageSerializer
+
+    def get_queryset(self):
+        return ProductImage.objects.filter(product_id=self.kwargs["product_pk"])
+    
+    def get_serializer_context(self):
+        return {"product_id": self.kwargs["product_pk"]}
+    
 
 """
 # Getting CollectionList or creating collection without Generic Views

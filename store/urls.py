@@ -1,4 +1,3 @@
-from cgitb import lookup
 from django.urls import path
 from store import views
 from rest_framework_nested import routers
@@ -15,6 +14,7 @@ router.register("orders", views.OrderViewSet, basename="orders")
 # route will look like - /products/1/reviews/
 products_router = routers.NestedDefaultRouter(router, "products", lookup="product")
 products_router.register("reviews", views.ReviewViewSet, basename="product-reviews")
+products_router.register("images", views.ProductImageViewSet, basename="product-images")
 # carts nested router
 # route will look like - /carts/<cart_id>/items/<cart_items_id>
 carts_router = routers.NestedDefaultRouter(router, "carts", lookup="cart")

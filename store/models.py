@@ -2,9 +2,10 @@ from uuid import uuid4
 from django.contrib import admin
 from django.conf import settings
 from django.db import models
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, FileExtensionValidator
 
 from store.constants import PAYMENT_STATUS_CHOICES, PAYMENT_STATUS_PENDING
+from store.validators import validate_file_size
 
 
 class Promotion(models.Model):
@@ -47,6 +48,12 @@ class Product(models.Model):
     class Meta:
         ordering = ["title"]
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="images")
+    image = models.ImageField(upload_to="store/images", validators=[validate_file_size])
+    # file = models.FileField(upload_to="store/images", validators=[FileExtensionValidator('pdf')])
+    
 
 class Customer(models.Model):
     MEMBERSHIP_BRONZE = "B"
