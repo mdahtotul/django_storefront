@@ -23,5 +23,9 @@ urlpatterns = [
     # path("", views.delete_collection),
     # path("", views.transaction_query),
     path("", views.executing_sql_query),
+    # path("", views.normal_emailing),
+    # path("", views.admin_emailing),
+    # path("", views.send_file_email),
+    # path("", views.send_template_email),
     path("hello/", views.render_store_html),
 ]

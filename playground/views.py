@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.mail import send_mail, mail_admins, mail_managers, BadHeaderError, EmailMessage
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction, connection
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
@@ -6,6 +7,7 @@ from django.db.models.aggregates import Count, Sum, Max, Min, Avg
 from django.db.models.functions import Concat
 from django.http import HttpResponse
 from django.shortcuts import render
+from templated_mail.mail import BaseEmailMessage
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 
@@ -27,7 +29,6 @@ def page_init(req):
             </html>
         """
     )
-
 
 def render_store_html(req):
     return render(req, "store.html", {"name": "core"})
@@ -367,3 +368,46 @@ def executing_sql_query(req):
         "hello.html",
         {"name": "Arif", "reason": "Raw SQL query", "result": list(query_set)},
     )
+
+
+def normal_emailing(request):
+    try:
+        send_mail('subject', 'message', 'info@arifbuy.com', ['bob@arifbuy.com'])
+    except BadHeaderError:
+        return HttpResponse('Invalid header found.')
+    return render(request, 'hello.html', {'name': 'Arif'})
+
+
+def admin_emailing(request):
+    try:
+        mail_admins('subject', 'message', html_message='<h1>message</h1>')
+    except BadHeaderError:
+        return HttpResponse('Invalid header found.')
+    return render(request, 'hello.html', {'name': 'Arif'})
+
+
+def send_file_email(request):
+    try:
+        message = EmailMessage('Check attach file', 'Check that file', 'arifulht@gmail.com', ['charlie@arifbuy.com'])
+        message.attach_file('playground/static/images/2.png')
+        message.send()
+    except BadHeaderError:
+        return HttpResponse('Invalid header found.')
+    return render(request, 'hello.html', {'name': 'Arif'})
+
+
+def send_template_email(request):
+    try:
+        message = BaseEmailMessage(
+            template_name='emails/test.html',
+            context={
+                'subject': 'check template email',
+                'to_person': 'Shuvo',
+                'from_person': 'Arif',
+            },
+        )
+        message.send(['shuvo629@gmail.com'])
+    except BadHeaderError:
+        return HttpResponse('Invalid header found.')
+    return render(request, 'hello.html', {'name': 'Arif'})
+
