@@ -8,6 +8,7 @@ from django.db.models.functions import Concat
 from django.http import HttpResponse
 from django.shortcuts import render
 from templated_mail.mail import BaseEmailMessage
+from playground.tasks import notify_users
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 
@@ -410,4 +411,9 @@ def send_template_email(request):
     except BadHeaderError:
         return HttpResponse('Invalid header found.')
     return render(request, 'hello.html', {'name': 'Arif'})
+
+def executing_task_using_celery(request):
+    notify_users.delay('Hello')
+    return render(request, 'hello.html', {'name': 'Arif'})
+
 
