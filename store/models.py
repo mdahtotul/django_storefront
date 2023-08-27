@@ -40,7 +40,7 @@ class Product(models.Model):
     collection = models.ForeignKey(
         Collection, on_delete=models.PROTECT, related_name="products"
     )
-    promotions = models.ManyToManyField(Promotion, blank=True)
+    promotions = models.ManyToManyField(Promotion, null=True, blank=True)
 
     def __str__(self) -> str:
         return f"{self.title}"
