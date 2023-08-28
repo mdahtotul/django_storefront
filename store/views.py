@@ -140,18 +140,14 @@ class ProductDetail(RetrieveUpdateDestroyAPIView):
 
 
 class ProductViewSet(ModelViewSet):
+    queryset = Product.objects.prefetch_related("images").all()
+    serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_class = ProductFilter
     search_fields = ["title", "description"]
     ordering_fields = ["unit_price", "last_update"]
     pagination_class = DefaultPagination
     permission_classes = [IsAdminOrReadOnly]
-
-    def get_queryset(self):
-        return Product.objects.prefetch_related("images").all()
-
-    def get_serializer_class(self):
-        return ProductSerializer
 
     def get_serializer_context(self):
         return {"request": self.request}
