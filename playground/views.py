@@ -1,3 +1,4 @@
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, mail_admins, mail_managers, BadHeaderError, EmailMessage
 from django.contrib.contenttypes.models import ContentType
@@ -11,6 +12,7 @@ from templated_mail.mail import BaseEmailMessage
 from playground.tasks import notify_users
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
+import requests
 
 
 def page_init(req):
@@ -417,3 +419,27 @@ def executing_task_using_celery(request):
     return render(request, 'hello.html', {'name': 'Arif'})
 
 
+def check_low_level_cache(req):
+    key = 'httpbin_result'
+    if cache.get(key) is None:
+        response = requests.get("https://httpbin.org/delay/2")
+        data = response.json()
+        cache.set(key, data, 10*60)
+
+    return HttpResponse(
+        """
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>Playground</title>
+            </head>
+            <body>
+                <h2><u>DJANGO PLAYGROUND</u></h2>
+                <p>🚀 You're at the django playground.</p>
+                <p>🚀 Cache: {cache.get(key)}</p>
+            </body>
+            </html>
+        """
+    )

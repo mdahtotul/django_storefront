@@ -25,6 +25,10 @@ class WebsiteUser(HttpUser):
                               "quantity": 1
                           }
                         )
+        
+    @task
+    def say_hello(self):
+        self.client.get("/playground/", name="/playground")
 
     
     def on_start(self):
