@@ -22,6 +22,7 @@
 
     th, td {
       text-align: left;
+      font-size: 12px;
       padding: 8px;
     }
     
@@ -36,10 +37,23 @@
         <tr>
             <th>Name</th>
             <th>Route</th>
-            <th>Authorization</th>
+            <th>Req Type</th>
+            <th>Token</th>
             <th>User role</th>
         </tr>
+
+        {% for item in all_domains %}
+        <tr>
+          <td>{{item.name}}</td>
+          <td><a href="{{item.endpoint}}">{{item.endpoint}}</a></td>
+          <td>{{item.req_type}}</td>
+          <td>{{item.token}}</td>
+          <td>{{item.access_role}}</td>
+        </tr>
+        {% endfor %}
+
         
+        <!-- 
         <tr>
           <td>auth-users</td>
           <td><a href="{{ domain_name }}/auth/users">{{ domain_name }}/auth/users</a></td>
@@ -94,7 +108,7 @@
           <td><a href="{{ domain_name }}/store/orders/">{{ domain_name }}/store/orders/</a></td>
           <td>JWT</td>
           <td>Authenticated</td>
-        </tr>
+        </tr> -->
             
     </table>
   </body>

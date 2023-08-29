@@ -1,17 +1,19 @@
-from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.mail import send_mail, mail_admins, mail_managers, BadHeaderError, EmailMessage
 from django.contrib.contenttypes.models import ContentType
+from django.views.decorators.cache import cache_page
 from django.db import transaction, connection
 from django.db.models import Q, F, Value, Func, ExpressionWrapper, DecimalField
 from django.db.models.aggregates import Count, Sum, Max, Min, Avg
 from django.db.models.functions import Concat
+from django.utils.decorators import method_decorator
 from django.http import HttpResponse
 from django.shortcuts import render
 from templated_mail.mail import BaseEmailMessage
 from playground.tasks import notify_users
 from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
+from rest_framework.views import APIView
 import requests
 
 
@@ -419,27 +421,20 @@ def executing_task_using_celery(request):
     return render(request, 'hello.html', {'name': 'Arif'})
 
 
+"""
+@cache_page(5 * 60)
 def check_low_level_cache(req):
-    key = 'httpbin_result'
-    if cache.get(key) is None:
+    response = requests.get("https://httpbin.org/delay/2")
+    data = response.json()
+
+    return render(req, 'hello.html', {'name': data})
+"""
+
+
+class CheckLowLevelCache(APIView):
+    @method_decorator(cache_page(5 * 60))
+    def get(self, req):
         response = requests.get("https://httpbin.org/delay/2")
         data = response.json()
-        cache.set(key, data, 10*60)
 
-    return HttpResponse(
-        """
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-                <meta charset="UTF-8" />
-                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-                <title>Playground</title>
-            </head>
-            <body>
-                <h2><u>DJANGO PLAYGROUND</u></h2>
-                <p>🚀 You're at the django playground.</p>
-                <p>🚀 Cache: {cache.get(key)}</p>
-            </body>
-            </html>
-        """
-    )
+        return render(req, 'hello.html', {'name': data})

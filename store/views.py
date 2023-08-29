@@ -15,6 +15,7 @@ from rest_framework.mixins import (
 )
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+from store.constants import get_all_domains
 
 # from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 # from rest_framework.decorators import api_view
@@ -52,7 +53,8 @@ from store.serializers import (
 
 def home(request):
     domain_name = f"{request.scheme}://{request.META['HTTP_HOST']}"
-    return render(request, "route.html", {"domain_name": domain_name})
+    all_domains = get_all_domains(domain_name)
+    return render(request, "route.html", {"all_domains": all_domains})
 
 """
 # Getting ProductList or creating product without Generic Views
