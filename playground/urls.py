@@ -28,6 +28,7 @@ urlpatterns = [
     # path("", views.send_file_email),
     # path("", views.send_template_email),
     # path("", views.executing_task_using_celery),
-    path("hello/", views.CheckLowLevelCache.as_view()),
+    # path("hello/", views.CheckLowLevelCache.as_view()),
     # path("hello/", views.render_store_html),
+    path("hello/", views.UsingLogger.as_view()),
 ]

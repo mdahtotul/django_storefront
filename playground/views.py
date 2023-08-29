@@ -15,7 +15,9 @@ from store.models import Product, OrderItem, Order, Customer, Collection
 from tags.models import TaggedItem
 from rest_framework.views import APIView
 import requests
+import logging
 
+logger = logging.getLogger(__name__) #playground.views
 
 def page_init(req):
     return HttpResponse(
@@ -438,3 +440,17 @@ class CheckLowLevelCache(APIView):
         data = response.json()
 
         return render(req, 'hello.html', {'name': data})
+
+class UsingLogger(APIView):
+    def get(self, req):
+        try:
+            logger.info("Calling httpbin")
+            response = requests.get("https://httpbin.org/delay/1")
+            data = response.json()
+            logger.info("Response received")
+        except requests.ConnectionError as e:
+            logger.critical('httpbin is offline')
+
+        return render(req, 'hello.html', {'name': data})
+    
+

@@ -16,20 +16,7 @@ from celery.schedules import crontab
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-7w-9t(jvb_=1#6c&sa6**jf%bvur2pg7+pqr_04ri!!cq@$=j4"
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Application definition
 
@@ -65,11 +52,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-if DEBUG:
-    MIDDLEWARE += [
-        "debug_toolbar.middleware.DebugToolbarMiddleware",
-        # 'silk.middleware.SilkyMiddleware',
-    ]
 
 INTERNAL_IPS = [
     # ...
@@ -102,21 +84,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        # "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        "ENGINE": "django.db.backends.mysql",
-        "NAME": "storefront3",
-        "HOST": "localhost",
-        "USER": "root",
-        "PASSWORD": "hp15CC154TX",
-    }
-}
 
 
 # Password validation
@@ -154,7 +121,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATICFILES_DIRS = os.path.join(BASE_DIR, "static")
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles_build", "static")
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
@@ -228,6 +196,7 @@ LOGGING = {
         "file": {
             "class": "logging.FileHandler",
             "filename": "general.log",
+            'formatter': 'verbose'
         }
     },
     'loggers': {
@@ -236,7 +205,7 @@ LOGGING = {
             'level': os.environ.get('DJANGO_LOG_LEVEL', 'INFO'),
         }
     },
-    'formatter': {
+    'formatters': {
         'verbose': {
             'format': '{asctime} ({levelname}) - {name} - {message}',
             'style': '{' #str.format()

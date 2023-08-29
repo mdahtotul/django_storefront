@@ -30,7 +30,7 @@ def get_all_domains(domain_name):
             "endpoint": f"{domain_name}/auth/jwt/create",
             "token": "",
             "req_type": "POST",
-            "access_role": "Authenticated"
+            "access_role": "Public"
         },
         {
             "name": "refresh JWT token",
